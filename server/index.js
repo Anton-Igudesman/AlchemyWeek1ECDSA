@@ -10,12 +10,6 @@ const {
   walletAddress1, 
   walletAddress2, 
   walletAddress3, 
-//   PRIVATE_KEY1, 
-//   PRIVATE_KEY2,
-//   PRIVATE_KEY3,
-//   PUBLIC_KEY1,
-//   PUBLIC_KEY2,
-//   PUBLIC_KEY3
 } = require('./scripts/generate.jsx');
 const port = 3042;
 
@@ -30,12 +24,10 @@ balances[walletAddress3] = 75;
 let transactionAlert = false;
 // console.log('wallet addresses', balances);
 
-const privateKeys = {};
-privateKeys[walletAddress1] = '906c363d3fd5618ed68cec14bf9eb15994a81c4ad1a99de88c7a400aec17f099';
-privateKeys[walletAddress2] = 'b4bb05d80937308b6767eb9c75e22e624fec222b48843163d87a0d74714057bb';
-privateKeys[walletAddress3] = 'a63a0fdbe0136806fc6458ed9bf861947960100cf50951cdf4a3225022ea6910';
-
-// console.log('private keys: ', privateKeys);
+// const privateKeys = {};
+// privateKeys[walletAddress1] = '906c363d3fd5618ed68cec14bf9eb15994a81c4ad1a99de88c7a400aec17f099';
+// privateKeys[walletAddress2] = 'b4bb05d80937308b6767eb9c75e22e624fec222b48843163d87a0d74714057bb';
+// privateKeys[walletAddress3] = 'a63a0fdbe0136806fc6458ed9bf861947960100cf50951cdf4a3225022ea6910';
 
 // function hashMessage(message) {
 //   const bytes = utf8ToBytes(message.toString());
@@ -53,9 +45,8 @@ function verifyAddress (keyArray, walletAddress) {
 app.get("/balance/:address", (req, res) => {
   const { address } = req.params;
   const balance = balances[address] || 0;
-  const privateKey = privateKeys[address];
 
-  res.send({ balance, privateKey });
+  res.send({ balance });
 });
 
 app.post("/send", (req, res) => {
@@ -65,8 +56,6 @@ app.post("/send", (req, res) => {
     amount, 
     publicKeyString } = req.body;
 
-    
-  
   const uint8Array = Uint8Array.from([...Object.values(JSON.parse(publicKeyString))]);
   const isValid = verifyAddress(uint8Array, sender)
 
@@ -87,15 +76,6 @@ app.post("/send", (req, res) => {
     } else {
       res.status(401).send({message: "You are not authorized! See your dealer!"});
     }
-
-       
-
-        
-      
-    
-
-
- 
 });
 
 app.listen(port, () => {
